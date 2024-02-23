@@ -1,0 +1,30 @@
+# Render an image with Kino
+
+```elixir
+Mix.install([
+  {:req, "~> 0.4.0"},
+  {:kino, "~> 0.12.3"}
+])
+```
+
+## Code
+
+```elixir
+user =
+  Req.new(
+    base_url: "https://api.github.com/users/1-bit-wonder",
+    headers: %{
+      authorization: "bearer " <> System.fetch_env!("LB_GITHUB_TOKEN"),
+      accept: "application/vnd.github+json"
+    }
+  )
+
+{:ok, res} = Req.get(user)
+
+avatar_url = res.body["avatar_url"]
+{:ok, avatar} = Req.get(avatar_url)
+
+Kino.Image.new(avatar.body, "image/jpeg")
+```
+
+<!-- livebook:{"offset":492,"stamp":{"token":"XCP.c_Lu1s6slO074iP6t6UAGR5VR7Q3WPeBTXRIodQEb4ce3Uhlx9jcMrTtVv32u3HZPxh8tjbNMzVjsQjNMFya7i99RZMarReHfd-WWwuUFGUKCmbpekUk","version":2}} -->

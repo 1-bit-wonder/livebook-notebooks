@@ -1,3 +1,5 @@
+<!-- livebook:{"autosave_interval_s":null} -->
+
 # Authenticated HTTP requests
 
 ```elixir
@@ -6,16 +8,19 @@ Mix.install([
 ])
 ```
 
-## Section
+## Making GET request with the req library
 
 ```elixir
 req =
   Req.new(
-    base_url: "https://api.github.com",
+    base_url: "https://api.github.com/users/1-bit-wonder",
     headers: %{
-      authorization: "bearer " <> System.fetch_env!("LB_GITHUB_TOKEN")
+      authorization: "bearer " <> System.fetch_env!("LB_GITHUB_TOKEN"),
+      accept: "application/vnd.github+json"
     }
   )
 
 {:ok, res} = Req.get(req)
 ```
+
+## Section
