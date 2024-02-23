@@ -1,0 +1,21 @@
+# Authenticated HTTP requests
+
+```elixir
+Mix.install([
+  {:req, "~> 0.4.0"}
+])
+```
+
+## Section
+
+```elixir
+req =
+  Req.new(
+    base_url: "https://api.github.com",
+    headers: %{
+      authorization: "bearer " <> System.fetch_env!("LB_GITHUB_TOKEN")
+    }
+  )
+
+{:ok, res} = Req.get(req)
+```
