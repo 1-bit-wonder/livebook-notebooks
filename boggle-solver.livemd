@@ -1,0 +1,104 @@
+# Boggle Solver
+
+## Solver Module
+
+```elixir
+defmodule Solver do
+  def boggle(_board, _wordlist) do
+    cell = fn row, col ->
+      %{row: row, col: col}
+    end
+
+    neighbors = fn c ->
+      %{
+        t: cell.(c.row - 1, c.col),
+        tr: cell.(c.row - 1, c.col + 1),
+        r: cell.(c.row, c.col + 1),
+        br: cell.(c.row + 1, c.col + 1),
+        b: cell.(c.row + 1, c.col),
+        bl: cell.(c.row + 1, c.col - 1),
+        l: cell.(c.row, c.col - 1),
+        tl: cell.(c.row - 1, c.col - 1)
+      }
+    end
+
+    check_neighbors = fn c, _chars ->
+      Enum.each(neighbors.(c), fn neighbor ->
+        IO.inspect(neighbor)
+      end)
+    end
+
+    check_neighbors.(cell.(0, 0), ["i", "s"])
+
+    # words = Enum.map(wordlist, fn word -> String.to_charlist(word) end)
+    # Enum.each(words, fn w -> check_board.(w) end)
+  end
+end
+
+board = {
+  {"i", "s", "u", "o"},
+  {"o", "s", "v", "e"},
+  {"n", "e", "p", "a"},
+  {"n", "t", "s", "u"}
+}
+
+words = [
+  "is",
+  "son",
+  "spa",
+  "sent",
+  "vast",
+  "issue",
+  "so",
+  "sap",
+  "ape",
+  "oven",
+  "nice",
+  "events",
+  "us",
+  "ten",
+  "east",
+  "nose",
+  "save",
+  "sonnet",
+  "up",
+  "vet",
+  "nest",
+  "tens",
+  "pause",
+  "session"
+]
+
+Solver.boggle(board, words)
+```
+
+## Setup & Solve
+
+```elixir
+# board1 = {
+#   {"i", "s", "u", "o"},
+#   {"o", "s", "v", "e"},
+#   {"n", "e", "p", "a"},
+#   {"n", "t", "s", "u"}
+# }
+
+# words1 = [
+#   "is", "son", "spa", "sent", "vast", "issue",
+#   "so", "sap", "ape", "oven", "nice", "events",
+#   "us", "ten", "east", "nose", "save", "sonnet",
+#   "up", "vet", "nest", "tens", "pause", "session"
+# ]
+
+# board2 = {
+#   {"e", "a"},
+#   {"s", "t"}
+# }
+
+# words2 = [
+#   "as", "ate", "set", "eats", "seat",
+#   "at", "eat", "sat", "east", "sate"
+# ]
+
+# Solver.boggle(board1, words1)
+# Boggle.boggle(board2, words2)
+```
