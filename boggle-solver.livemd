@@ -4,31 +4,60 @@
 
 ```elixir
 defmodule Solver do
-  def boggle(_board, _wordlist) do
-    cell = fn row, col ->
+  def boggle(board, _wordlist) do
+    cellmap = fn row, col ->
       %{row: row, col: col}
     end
 
-    neighbors = fn c ->
-      %{
-        t: cell.(c.row - 1, c.col),
-        tr: cell.(c.row - 1, c.col + 1),
-        r: cell.(c.row, c.col + 1),
-        br: cell.(c.row + 1, c.col + 1),
-        b: cell.(c.row + 1, c.col),
-        bl: cell.(c.row + 1, c.col - 1),
-        l: cell.(c.row, c.col - 1),
-        tl: cell.(c.row - 1, c.col - 1)
-      }
+    neighbors = fn cell ->
+      [
+        # TOP
+        cellmap.(cell.row - 1, cell.col),
+        # TOP RIGHT
+        cellmap.(cell.row - 1, cell.col + 1),
+        # RIGHT
+        cellmap.(cell.row, cell.col + 1),
+        # BOTTOM RIGHT
+        cellmap.(cell.row + 1, cell.col + 1),
+        # BOTTOM
+        cellmap.(cell.row + 1, cell.col),
+        # BOTTOM LEFT
+        cellmap.(cell.row + 1, cell.col - 1),
+        # LEFT
+        cellmap.(cell.row, cell.col - 1),
+        # TOP LEFT
+        cellmap.(cell.row - 1, cell.col - 1)
+      ]
     end
 
-    check_neighbors = fn c, _chars ->
-      Enum.each(neighbors.(c), fn neighbor ->
-        IO.inspect(neighbor)
+    in_range? = fn cell ->
+      size = length(Tuple.to_list(board))
+
+      cell.row >= 0 and
+        cell.col >= 0 and
+        cell.row <= size and
+        cell.col <= size
+    end
+
+    match_char = fn cell, char ->
+      if in_range?.(cell) do
+        value = elem(elem(board, cell.row), cell.col)
+
+        if value == char do
+          cell
+        end
+      end
+    end
+
+    check_neighbors = fn cell, char ->
+      Enum.each(neighbors.(cell), fn neighbor ->
+        neighbor
+        |> match_char.(char)
+        |> IO.inspect()
       end)
     end
 
-    check_neighbors.(cell.(0, 0), ["i", "s"])
+    check_neighbors.(cellmap.(0, 0), "s")
 
     # words = Enum.map(wordlist, fn word -> String.to_charlist(word) end)
     # Enum.each(words, fn w -> check_board.(w) end)
@@ -46,27 +75,7 @@ words = [
   "is",
   "son",
   "spa",
-  "sent",
-  "vast",
-  "issue",
-  "so",
-  "sap",
-  "ape",
-  "oven",
-  "nice",
-  "events",
-  "us",
-  "ten",
-  "east",
-  "nose",
-  "save",
-  "sonnet",
-  "up",
-  "vet",
-  "nest",
-  "tens",
-  "pause",
-  "session"
+  "sent"
 ]
 
 Solver.boggle(board, words)
